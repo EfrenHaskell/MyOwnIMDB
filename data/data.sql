@@ -1,3 +1,90 @@
+CREATE table MotionPicture (
+    id int,
+    name text,
+    rating float,
+    production text,
+    budget int,
+    CHECK (rating >= 0),
+    CHECK (rating <= 10),
+    CHECK (budget > 0),
+    PRIMARY KEY(id)
+);
+
+CREATE table Users (
+    email VarChar(255),
+    name text,
+    age int,
+    PRIMARY KEY(email)
+);
+
+CREATE table Likes (
+    uemail VarChar(255),
+    mpid int,
+    FOREIGN KEY(uemail) references Users(email) ON DELETE CASCADE,
+    FOREIGN KEY(mpid) references MotionPicture(id) ON DELETE CASCADE,
+    PRIMARY KEY(uemail, mpid)
+);
+
+CREATE table Movie (
+    mpid int,
+    boxoffice_collection float,
+    CHECK (boxoffice_collection >= 0),
+    PRIMARY KEY(mpid),
+    FOREIGN KEY(mpid) references MotionPicture(id) ON DELETE CASCADE
+);
+
+CREATE table Series (
+    mpid int,
+    season_count int,
+    CHECK (season_count >= 1)
+    FOREIGN KEY(mpid) references MotionPicture(id) ON DELETE CASCADE,
+    PRIMARY KEY(mpid)
+);
+
+CREATE table People (
+    id int,
+    name text,
+    nationality text,
+    dob DATE,
+    gender CHAR,
+    PRIMARY KEY(id)
+);
+
+CREATE table Role (
+    mpid int,
+    pid int,
+    role_name VarChar(255),
+    FOREIGN KEY(mpid) references MotionPicture(id) ON DELETE CASCADE,
+    FOREIGN KEY(pid) references People(id) ON DELETE CASCADE,
+    PRIMARY KEY(mpid, pid, role_name)
+);
+
+CREATE table Award (
+    mpid int,
+    pid int,
+    award_name VarChar(255),
+    award_year VarChar(255),
+    FOREIGN KEY(mpid) references MotionPicture(id) ON DELETE CASCADE,
+    FOREIGN KEY(pid) references People(id) ON DELETE CASCADE,
+    PRIMARY KEY(mpid, pid, award_name, award_year)
+);
+
+CREATE table Genre (
+    mpid int,
+    genre_name VarChar(255),
+    FOREIGN KEY(mpid) references MotionPicture(id) ON DELETE CASCADE,
+    PRIMARY KEY(mpid, genre_name)
+);
+
+CREATE table Location (
+    mpid int,
+    zip int,
+    city text,
+    country text,
+    FOREIGN KEY(mpid) references MotionPicture(id) ON DELETE CASCADE,
+    PRIMARY KEY(mpid, zip)
+);
+
 INSERT INTO MotionPicture (id, NAME, rating, production, budget) VALUES
 (101, 'Breaking Bad', 9.1, 'High Bridge Productions', 195000000),
 (102, 'Band of Brothers', 9.5, 'DreamWorks', 125000000),
